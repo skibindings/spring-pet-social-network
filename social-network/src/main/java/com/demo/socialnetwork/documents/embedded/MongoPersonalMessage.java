@@ -8,7 +8,8 @@ public class MongoPersonalMessage {
 	
 	private boolean reciept;
 	
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	//@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date timestamp;
 	
 	private String text;

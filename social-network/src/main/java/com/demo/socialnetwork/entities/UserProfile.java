@@ -83,7 +83,9 @@ public class UserProfile {
 	private List<UserProfile> friends;
 	
 	public UserProfile() {
-		
+		phoneNumber = null;
+		city = null;
+		about = null;
 	}
 
 	public UserProfile(String username, String mongoId, String name, String surname, Date birthdate, String email,
@@ -208,6 +210,4 @@ public class UserProfile {
 	public void setFriends(List<UserProfile> friends) {
 		this.friends = friends;
 	}
-
-	
 }

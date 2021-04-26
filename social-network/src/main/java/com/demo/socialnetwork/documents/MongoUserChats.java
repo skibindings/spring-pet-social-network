@@ -1,5 +1,6 @@
 package com.demo.socialnetwork.documents;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Id;
@@ -17,7 +18,7 @@ public class MongoUserChats {
 	private List<MongoChat> chats;
 	
 	public MongoUserChats() {
-		
+		chats = new ArrayList<MongoChat>();
 	}
 
 	public MongoUserChats(List<MongoChat> chats) {

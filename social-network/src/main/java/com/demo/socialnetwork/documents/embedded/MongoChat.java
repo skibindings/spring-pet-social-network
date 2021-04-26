@@ -1,5 +1,6 @@
 package com.demo.socialnetwork.documents.embedded;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MongoChat {
@@ -7,9 +8,12 @@ public class MongoChat {
 	private String correspUsername; 
 	
 	private List<MongoPersonalMessage> pms;
+	
+	public MongoChat() {
+		pms = new ArrayList<MongoPersonalMessage>();
+	}
 
 	public MongoChat(String correspUsername, List<MongoPersonalMessage> pms) {
-		super();
 		this.correspUsername = correspUsername;
 		this.pms = pms;
 	}
