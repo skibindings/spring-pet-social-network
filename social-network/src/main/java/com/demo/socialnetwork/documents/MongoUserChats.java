@@ -17,13 +17,17 @@ public class MongoUserChats {
 	
 	private List<MongoChat> chats;
 	
+	private int newPmsCounter;
+	
 	public MongoUserChats() {
 		chats = new ArrayList<MongoChat>();
+		newPmsCounter = 0;
 	}
 
-	public MongoUserChats(List<MongoChat> chats) {
+	public MongoUserChats(List<MongoChat> chats, int newPmsCounter) {
 		super();
 		this.chats = chats;
+		this.newPmsCounter = newPmsCounter;
 	}
 
 	public String getId() {
@@ -40,5 +44,13 @@ public class MongoUserChats {
 
 	public void setChats(List<MongoChat> chats) {
 		this.chats = chats;
+	}
+
+	public int getNewPmsCounter() {
+		return newPmsCounter;
+	}
+
+	public void setNewPmsCounter(int newPmsCounter) {
+		this.newPmsCounter = newPmsCounter;
 	}
 }

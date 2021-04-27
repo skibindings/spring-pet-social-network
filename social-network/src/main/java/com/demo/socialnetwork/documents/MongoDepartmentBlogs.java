@@ -1,5 +1,6 @@
 package com.demo.socialnetwork.documents;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Id;
@@ -9,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.demo.socialnetwork.documents.embedded.MongoBlog;
 import com.demo.socialnetwork.documents.embedded.MongoChat;
 
-@Document(collation = "departments_blogs")
+@Document(collection = "departments_blogs")
 public class MongoDepartmentBlogs {
 	
 	@Id
@@ -18,7 +19,7 @@ public class MongoDepartmentBlogs {
 	private List<MongoBlog> blogs;
 	
 	public MongoDepartmentBlogs() {
-		
+		blogs = new ArrayList<>();
 	}
 
 	public MongoDepartmentBlogs(List<MongoBlog> blogs) {

@@ -42,7 +42,7 @@ public class RegisterServiceImpl implements RegisterService {
 		newUser.getUserProfile().setUsername(newUser.getUserSecurity().getUsername());
 		
 		UserAuthority newUserAuthority = new UserAuthority(newUser.getUserSecurity().getUsername(),"ROLE_EMPLOYEE");
-		
+
 		String password_unprocessed = newUser.getUserSecurity().getPassword();
 		String password_processed = "{noop}"+password_unprocessed;
 		newUser.getUserSecurity().setPassword(password_processed);

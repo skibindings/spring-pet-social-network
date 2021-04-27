@@ -1,5 +1,7 @@
 package com.demo.socialnetwork.entities;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -7,12 +9,14 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -47,7 +51,7 @@ public class UserProfile {
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@NotNull(message = "Обязательное поле!")
-	@Past(message = "Неверная дата!")
+	//@Past(message = "Неверная дата!")
 	private Date birthdate;
 	
 	@Column(name = "email")
@@ -64,7 +68,7 @@ public class UserProfile {
 	@Column(name = "about")
 	private String about;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinColumn(name="dep_id")
 	private Department dep;
 
@@ -82,10 +86,14 @@ public class UserProfile {
 			)
 	private List<UserProfile> friends;
 	
+	@OneToOne
+	@JoinColumn(name = "username")
+	UserSecurity security;
+	
 	public UserProfile() {
-		phoneNumber = null;
-		city = null;
-		about = null;
+		friendRequestsToMe = new ArrayList<FriendRequest>();
+		friendRequestsFromMe = new ArrayList<FriendRequest>();
+		friends = new ArrayList<UserProfile>();
 	}
 
 	public UserProfile(String username, String mongoId, String name, String surname, Date birthdate, String email,
@@ -209,5 +217,23 @@ public class UserProfile {
 
 	public void setFriends(List<UserProfile> friends) {
 		this.friends = friends;
+	}
+
+	public UserSecurity getSecurity() {
+		return security;
+	}
+
+	public void setSecurity(UserSecurity security) {
+		this.security = security;
+	}
+	
+	public boolean isManager() {
+		return security.getAuthorities().stream()
+                .anyMatch(x -> x.getAuthority().equals("ROLE_MANAGER")); 
+	}
+	
+	public boolean isAdmin() {
+		return security.getAuthorities().stream()
+                .anyMatch(x -> x.getAuthority().equals("ROLE_ADMIN")); 
 	}
 }

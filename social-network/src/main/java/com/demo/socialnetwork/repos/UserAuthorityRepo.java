@@ -9,4 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @Repository
 public interface UserAuthorityRepo extends JpaRepository<UserAuthority, String>{
 	
+	public long deleteByUsernameAndAuthority(String username, String authority);
+	
+	public long deleteByUsername(String username);
 }

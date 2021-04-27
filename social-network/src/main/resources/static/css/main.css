@@ -1,18 +1,43 @@
 h1 {
-  background-color: green;
+  background: rgba(0, 128, 0, 0.2);
 }
+
+
 
 div {
   background-color: lightblue;
 }
 
 p {
-  background-color: yellow;
+  background-color: rgba(64, 128, 0, 0.1);
 }
 
 body {
   background: rgba(0, 128, 0, 0.1) /* Green background with 30% opacity */
 }
+
+table {   
+	border-collapse:collapse;
+	border-bottom:1px solid gray;
+	font-family: Tahoma,Verdana,Segoe,sans-serif;
+	width:72%;
+}
+ 
+th {
+	border-bottom:1px solid gray;
+	background:none repeat scroll 0 0 rgba(0, 128, 0, 0.4);
+	padding:10px;
+	color: #FFFFFF;
+}
+
+tr {
+	border-top:1px solid gray;
+	text-align:center;	
+}
+ 
+tr:nth-child(even) {background: rgba(0, 128, 0, 0.1)}
+tr:nth-child(odd) {background: rgba(0, 128, 0, 0.0)}	
+ 
 
 /* Add a black background color to the top navigation */
 .topnav {
@@ -40,6 +65,12 @@ body {
 .topnav a.active {
   background-color: #4CAF50;
   color: white;
+}
+
+.topnav a.activeright {
+  background-color: #4CAF50;
+  color: white;
+  float: right;
 }
 
 /* Add a color to the active/current link */

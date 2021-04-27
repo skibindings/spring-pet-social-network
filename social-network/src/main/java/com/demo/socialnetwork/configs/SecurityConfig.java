@@ -29,8 +29,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests()
 			.antMatchers("/").hasRole("EMPLOYEE")
-			.antMatchers("/leaders/**").hasRole("MANAGER")
-			.antMatchers("/systems/**").hasRole("ADMIN")
+			.antMatchers("/users/**").hasRole("EMPLOYEE")
+			.antMatchers("/deps/**").hasRole("EMPLOYEE")
+			.antMatchers("/messages").hasRole("EMPLOYEE")
+			.antMatchers("/user_edit").hasRole("EMPLOYEE")
+			.antMatchers("/user_edit_submit").hasRole("EMPLOYEE")
+			.antMatchers("/dep_edit").hasRole("MANAGER")
+			.antMatchers("/dep_edit_submit").hasRole("MANAGER")
+			.antMatchers("/admin_panel").hasRole("ADMIN")
+			.antMatchers("/user_delete/**").hasRole("ADMIN")
+			.antMatchers("/user_promote/**").hasRole("ADMIN")
+			.antMatchers("/user_demote/**").hasRole("ADMIN")
 			.and()
 			.formLogin()
 				.loginPage("/login")
@@ -41,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 			.logoutSuccessUrl("/login").permitAll()
 			.and()
-			.exceptionHandling().accessDeniedPage("/access-denied");
+			.exceptionHandling().accessDeniedPage("/access_denied");
 		
 	}
 }

@@ -28,7 +28,7 @@ public class UserSecurity {
 	@Column(name = "enabled", nullable = false, columnDefinition = "TINYINT(1)")
 	private boolean enabled;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany
 	@JoinColumn(name="username")
 	private List<UserAuthority> authorities;
 	
@@ -73,5 +73,11 @@ public class UserSecurity {
 
 	public void setAuthorities(List<UserAuthority> authorities) {
 		this.authorities = authorities;
+	}
+	
+	public void removeAuthority(String role_name) {
+		authorities.removeIf(s -> s.getAuthority().equals(role_name));
+		authorities.stream().forEach(s -> System.out.println(s.getAuthority()));
+		
 	}
 }

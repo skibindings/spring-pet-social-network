@@ -13,9 +13,9 @@ public class MongoChat {
 		pms = new ArrayList<MongoPersonalMessage>();
 	}
 
-	public MongoChat(String correspUsername, List<MongoPersonalMessage> pms) {
+	public MongoChat(String correspUsername) {
 		this.correspUsername = correspUsername;
-		this.pms = pms;
+		this.pms = new ArrayList<MongoPersonalMessage>();
 	}
 
 	public String getCorrespUsername() {

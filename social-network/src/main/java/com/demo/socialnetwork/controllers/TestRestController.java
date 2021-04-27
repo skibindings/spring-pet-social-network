@@ -15,8 +15,10 @@ import com.demo.socialnetwork.documents.MongoUserChats;
 import com.demo.socialnetwork.documents.embedded.MongoChat;
 import com.demo.socialnetwork.documents.embedded.MongoPersonalMessage;
 import com.demo.socialnetwork.entities.UserAuthority;
+import com.demo.socialnetwork.entities.UserProfile;
 import com.demo.socialnetwork.repos.MongoUserChatsRepo;
 import com.demo.socialnetwork.repos.UserSecurityRepo;
+import com.demo.socialnetwork.services.UserService;
 
 @RestController
 @RequestMapping("/rest")
@@ -26,6 +28,8 @@ public class TestRestController {
 	private UserSecurityRepo secUserRepo;
 	@Autowired
 	private MongoUserChatsRepo mongoUserChatsRepo;
+	@Autowired
+	private UserService userService;
 
 	@GetMapping("/security_users")
 	public Iterable<UserSecurity> getAllUsersSecurity() {
@@ -40,16 +44,14 @@ public class TestRestController {
 	
 	@GetMapping("/create")
 	public Iterable<UserSecurity> createUserSecurity() {
-		secUserRepo.save(new UserSecurity("lisiyrak2","fox333",true));
+		//secUserRepo.save(new UserSecurity("lisiyrak2","fox333",true));
 		return null;
 	}
 	
 	@GetMapping("/mongo_test")
 	public Iterable<MongoUserChats> createUserChatsAndReturn() {
-		MongoPersonalMessage msg1 = new MongoPersonalMessage(false, new Date(), "привет");
-		MongoChat chat = new MongoChat("mary", Arrays.asList(msg1));
-		MongoUserChats userChats = new MongoUserChats(Arrays.asList(chat));
-		mongoUserChatsRepo.save(userChats);
+		//userService.createChat("admin", "woolio");
+		//userService.sendMessage("admin", "woolio", "POG");
 		return mongoUserChatsRepo.findAll();
 	}
 }

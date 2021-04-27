@@ -22,6 +22,11 @@ public class MongoBlog {
 		likeUsernames = new ArrayList<String>();
 		comments = new ArrayList<MongoBlogComment>();
 	}
+	
+	public MongoBlog(String text) {
+		this();
+		text = "";
+	}
 
 	public MongoBlog(Date timestamp, String text, List<String> likeUsernames, List<MongoBlogComment> comments) {
 		super();
