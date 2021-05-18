@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -40,8 +41,8 @@
 	  </c:if>
   </c:if>
   
-  <a href="#news">Друзья</a>
-  <a href="#contact">Мессенджер</a>
+  <a href="/users/${session_username}/friends">Друзья</a>
+  <a href="/chats">Мессенджер</a>
   
   
   <a class="logout" href="<c:url value="/logout" />">Выйти</a>
@@ -50,6 +51,7 @@
   <a class="logout" href="<c:url value="/admin_panel" />">Администрирование</a>
   </security:authorize>
   
+  <a class="logout" href="<c:url value="/search" />">Поиск</a>
   
 </div>
 
@@ -81,7 +83,6 @@ ${page_dep.description}
 </p>
 
 <c:if test="${session_user.username == page_dep.leader.username}">
-
 <form:form action="/deps/${page_dep.id}/post_submit"
 			   modelAttribute="new_post" method="POST">
 		<form:textarea path="text" rows="6" cols="50" maxlength="300"/>
@@ -90,12 +91,12 @@ ${page_dep.description}
 </c:if>
 
 	<c:forEach var="post" items="${posts}">			
-		<p>
-			${post.timestamp}
-		</p>
 		<div>
+			<fmt:formatDate value="${post.timestamp}" pattern="MM-dd HH:mm:ss" />
+			<br>
 			${post.text}
 		</div>
+		<br>
 	</c:forEach>
 
 <hr>

@@ -27,11 +27,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.demo.socialnetwork.controllers.models.ChatWithUserProfileModel;
 import com.demo.socialnetwork.controllers.models.RegisterModel;
 import com.demo.socialnetwork.documents.MongoDepartmentBlogs;
 import com.demo.socialnetwork.documents.embedded.MongoBlog;
+import com.demo.socialnetwork.documents.embedded.MongoPersonalMessage;
 import com.demo.socialnetwork.entities.Department;
 import com.demo.socialnetwork.entities.UserProfile;
 import com.demo.socialnetwork.entities.UserSecurity;
@@ -88,9 +91,125 @@ public class DefaultController {
 			if(sessionUserProfile != null) {
 				model.addAttribute("session_user",sessionUserProfile);
 			}
+			model.addAttribute("friend",sessionUserProfile.hasFriendWithUsername(username));
+			model.addAttribute("friend_request",sessionUserProfile.friendRequestWasSentToUser(username));
 		}
 		
 		return "user_page";
+	}
+	
+	@RequestMapping("/users/{username}/friends")
+	public String getUserFriends(@PathVariable String username, Model model) {
+		UserProfile userProfile = userService.getUserProfile(username);
+		
+		if(userProfile == null) {
+			// TODO return user not found page
+		}
+		else {
+			model.addAttribute("user_profile",userProfile);
+		}
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication.getName().equals(username)) {
+			model.addAttribute("session_user",userProfile);
+		}
+		else {
+			UserProfile sessionUserProfile = userService.getUserProfile(authentication.getName());
+			if(sessionUserProfile != null) {
+				model.addAttribute("session_user",sessionUserProfile);
+			}
+		}
+		
+		return "user_friends";
+	}
+	
+	@RequestMapping("/send_friend_request/{username}")
+	public String sendFriendRequest(@PathVariable String username, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		userService.sendFriendRequest(authentication.getName(), username);
+		return "redirect:/users/"+username;
+	}
+	
+	@RequestMapping("/confirm_friend_request/{username}")
+	public String confirmFriendRequest(@PathVariable String username, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		userService.confirmFriendRequest(authentication.getName(), username);
+		return "redirect:/users/"+authentication.getName()+"/friends";
+	}
+	
+	@RequestMapping("/decline_friend_request/{username}")
+	public String declineFriendRequest(@PathVariable String username, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		userService.declineFriendRequest(authentication.getName(), username);
+		return "redirect:/users/"+authentication.getName()+"/friends";
+	}
+	
+	@RequestMapping("/remove_friend/{username}")
+	public String removeFriend(@PathVariable String username, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		userService.deleteFriendPair(authentication.getName(), username);
+		return "redirect:/users/"+authentication.getName()+"/friends";
+	}
+	
+	@RequestMapping("/chats")
+	public String getUserChats(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserProfile sessionUserProfile = userService.getUserProfile(authentication.getName());
+		model.addAttribute("session_user",sessionUserProfile);
+		
+		List<ChatWithUserProfileModel> chatWithUserProfileModels = userService.getAllChatsWithProfilesSortedByLastMessageDate(sessionUserProfile.getMongoId());
+		model.addAttribute("chats_profiles",chatWithUserProfileModels);
+		
+		return "user_all_chats";
+	}
+	
+	@RequestMapping("/chats/{username}")
+	public String getUserChat(@PathVariable String username, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserProfile sessionUserProfile = userService.getUserProfile(authentication.getName());
+		model.addAttribute("session_user",sessionUserProfile);
+		
+		ChatWithUserProfileModel chatWithUserProfile = userService.getChatWithProfileByCorrespUsername(sessionUserProfile.getMongoId(), username);
+		Collections.reverse(chatWithUserProfile.getChat().getPms());
+		model.addAttribute("chat_profile",chatWithUserProfile);
+		
+		MongoPersonalMessage message = new MongoPersonalMessage();
+		model.addAttribute("new_message",message);
+		
+		return "user_chat";
+	}
+	
+	@RequestMapping("/create_chat/{username}")
+	public String createChat(@PathVariable String username, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(!userService.chatExists(authentication.getName(), username)) {
+			userService.createChat(authentication.getName(), username);
+		}
+		return "redirect:/chats/"+username;
+	}
+	
+	@PostMapping("/chats/{username}/send_message")
+	public String sendMessage(@PathVariable String username, @ModelAttribute("new_message") MongoPersonalMessage newMessage) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		userService.sendMessage(authentication.getName(), username, newMessage.getText());
+		return "redirect:/chats/"+username;
+	}
+	
+	@RequestMapping("/search")
+	public String searchDepsAndUsers(@RequestParam(value = "searchQuery", required = false) String searchQuery, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserProfile sessionUserProfile = userService.getUserProfile(authentication.getName());
+		model.addAttribute("session_user",sessionUserProfile);
+		
+		if(searchQuery != null) {
+			if(!searchQuery.isBlank()) {
+				Set<UserProfile> searchedUsers = userService.searchUsers(searchQuery);
+				model.addAttribute("users",searchedUsers);
+			}
+		}
+		
+		return "search_page";
 	}
 	
 	@RequestMapping("/deps/{depId}")
@@ -139,8 +258,6 @@ public class DefaultController {
 		
 		Department depInfo = departmentService.getDepartmentInfo(depId);
 		model.addAttribute("page_dep",depInfo);
-
-		model.addAttribute("members_num",depInfo.getUsers().size());
 		
 		return "dep_members";
 	}
@@ -263,10 +380,6 @@ public class DefaultController {
 		List<UserProfile> adminUsers = allUsers.stream().filter(x -> x.isAdmin()).collect(Collectors.toList());
 		List<UserProfile> managerUsers = allUsers.stream().filter(x -> x.isManager()).collect(Collectors.toList());
 		List<UserProfile> employeeUsers = allUsers.stream().filter(x -> (!x.isManager() && !x.isAdmin())).collect(Collectors.toList());
-		
-		model.addAttribute("adminsNum",adminUsers.size());
-		model.addAttribute("managersNum",managerUsers.size());
-		model.addAttribute("employeesNum",employeeUsers.size());
 		
 		model.addAttribute("admins",adminUsers);
 		model.addAttribute("managers",managerUsers);

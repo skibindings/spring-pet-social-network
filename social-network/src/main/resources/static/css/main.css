@@ -37,7 +37,15 @@ tr {
  
 tr:nth-child(even) {background: rgba(0, 128, 0, 0.1)}
 tr:nth-child(odd) {background: rgba(0, 128, 0, 0.0)}	
- 
+
+.corresp_message {
+   background-color: lightblue;
+}
+
+.your_message {
+   background-color: rgba(255, 80, 80, 0.5);
+}
+
 
 /* Add a black background color to the top navigation */
 .topnav {

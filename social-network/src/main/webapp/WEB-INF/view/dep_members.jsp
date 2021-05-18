@@ -40,8 +40,8 @@
 		</c:if>
 	</c:if>
   
-  <a href="#news">Друзья</a>
-  <a href="#contact">Мессенджер</a>
+  <a href="/users/${session_username}/friends">Друзья</a>
+  <a href="/chats">Мессенджер</a>
   
   
   <a class="logout" href="<c:url value="/logout" />">Выйти</a>
@@ -50,12 +50,13 @@
   <a class="logout" href="<c:url value="/admin_panel" />">Администрирование</a>
   </security:authorize>
   
+  <a class="logout" href="<c:url value="/search" />">Поиск</a>
   
 </div>
 
 <h1>Сотрудники отдела '${page_dep.name}'</h1>
 <hr>
-<h2>Количество: (${members_num})</h2>
+<h2>Количество: (${page_dep.users.size()})</h2>
 
 <table>
 	<tr>

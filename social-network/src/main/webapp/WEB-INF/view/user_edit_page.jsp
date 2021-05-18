@@ -34,8 +34,8 @@
   <a href="/deps/${edit_user.dep.id}">Мой отдел</a>
   </c:if>
   
-  <a href="#news">Друзья</a>
-  <a href="#contact">Мессенджер</a>
+  <a href="/users/${session_username}/friends">Друзья</a>
+  <a href="/chats">Мессенджер</a>
   
   
   <a class="logout" href="<c:url value="/logout" />">Выйти</a>
@@ -44,6 +44,7 @@
   <a class="logout" href="<c:url value="/admin_panel" />">Администрирование</a>
   </security:authorize>
   
+  <a class="logout" href="<c:url value="/search" />">Поиск</a>
   
 </div>
 

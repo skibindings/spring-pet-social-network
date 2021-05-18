@@ -37,8 +37,8 @@
   <a href="/deps/${session_user.dep.id}">Мой отдел</a>
   </c:if>
   
-  <a href="#news">Друзья</a>
-  <a href="#contact">Мессенджер</a>
+  <a href="/users/${session_username}/friends">Друзья</a>
+  <a href="/chats">Мессенджер</a>
   
   
   <a class="logout" href="<c:url value="/logout" />">Выйти</a>
@@ -47,12 +47,13 @@
   <a class="activeright" href="<c:url value="/admin_panel" />">Администрирование</a>
   </security:authorize>
   
+  <a class="logout" href="<c:url value="/search" />">Поиск</a>
   
 </div>
 
 <h1>Администрирование</h1>
 <hr>
-<h2>Администраторы (${adminsNum})</h2>
+<h2>Администраторы (${admins.size()})</h2>
 
 <table>
 	<tr>
@@ -71,7 +72,7 @@
 	</c:forEach>
 </table>
 
-<h2>Руководители (${managersNum})</h2>
+<h2>Руководители (${managers.size()})</h2>
 
 <table>
 	<tr>
@@ -89,12 +90,15 @@
 			<td> <a href="${userProfileLink}">${tempUser.username}</a> </td>
 			<td> ${tempUser.name} </td>
 			<td> ${tempUser.surname} </td>
-			<td> <a href="${deleteProfileLink}">Удалить профиль</a> <a href="${demoteLink}">Убрать из руководителей</a> </td>
+			<td> 
+			<!--<a href="${deleteProfileLink}">Удалить профиль</a> -->
+			<a href="${demoteLink}">Убрать из руководителей</a> 
+			 </td>
 		</tr>
 	</c:forEach>
 </table>
 
-<h2>Сотрудники (${employeesNum})</h2>
+<h2>Сотрудники (${employees.size()})</h2>
 
 <table>
 	<tr>
@@ -113,8 +117,9 @@
 			<td> ${tempUser.name} </td>
 			<td> ${tempUser.surname} </td>
 			<td> 
-			<a href="${deleteProfileLink}">Удалить профиль</a> 
-			<a href="${promoteLink}">Назначить руководителем</a> </td>
+			<!-- <a href="${deleteProfileLink}">Удалить профиль</a>  -->
+			<a href="${promoteLink}">Назначить руководителем</a> 
+			</td>
 		</tr>
 	</c:forEach>
 </table>

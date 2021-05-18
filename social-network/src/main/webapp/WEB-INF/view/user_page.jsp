@@ -38,8 +38,8 @@
   <a href="/deps/${session_user.dep.id}">Мой отдел</a>
   </c:if>
   
-  <a href="#news">Друзья</a>
-  <a href="#contact">Мессенджер</a>
+  <a href="/users/${session_username}/friends">Друзья</a>
+  <a href="/chats">Мессенджер</a>
   
   
   <a class="logout" href="<c:url value="/logout" />">Выйти</a>
@@ -48,6 +48,7 @@
   <a class="logout" href="<c:url value="/admin_panel" />">Администрирование</a>
   </security:authorize>
   
+  <a class="logout" href="<c:url value="/search" />">Поиск</a>
   
 </div>
 
@@ -79,12 +80,32 @@ ${position} отдела '${user_profile.dep.name}'
 </font>
 </h2>
 
-
-<c:if test="${user_profile.username == session_username}">
-<a class="active" href="/user_edit">Редактировать профиль</a>
+<c:if test="${user_profile.username != session_username}">
+	<c:if test="${!friend}">
+		<c:if test="${!friend_request}">
+			<a href="/send_friend_request/${user_profile.username}">Добавить в друзья</a>
+		</c:if>
+		<c:if test="${friend_request}">
+			Запрос дружбы отправлен
+		</c:if>
+	</c:if>
+	<br>
+	<a href="/create_chat/${user_profile.username}">Чат</a>
 </c:if>
 
+<c:if test="${user_profile.dep != null}">
+<a href="/deps/${user_profile.dep.id}">Отдел</a>
+</c:if>
+<a href="/users/${user_profile.username}/friends">Друзья</a>
+
 <hr>
+
+<c:if test="${user_profile.username == session_username}">
+<a href="/user_edit">Редактировать профиль</a>
+<hr>
+</c:if>
+
+
 <p>
 День рождения: ${user_profile.birthdate}
 </p>

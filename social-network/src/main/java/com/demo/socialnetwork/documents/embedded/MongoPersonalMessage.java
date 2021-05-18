@@ -13,6 +13,10 @@ public class MongoPersonalMessage {
 	private Date timestamp;
 	
 	private String text;
+	
+	public MongoPersonalMessage() {
+		text = "";
+	}
 
 	public MongoPersonalMessage(boolean reciept, Date timestamp, String text) {
 		super();

@@ -236,4 +236,32 @@ public class UserProfile {
 		return security.getAuthorities().stream()
                 .anyMatch(x -> x.getAuthority().equals("ROLE_ADMIN")); 
 	}
+	
+	public void addFriend(UserProfile userToFriend) {
+		friends.add(userToFriend);
+	}
+	
+	public void removeFriend(UserProfile friendToRemove) {
+		friends.removeIf(x -> x.getUsername().equals(friendToRemove.getUsername()));
+	}
+	
+	public boolean hasFriendWithUsername(String username) {
+		return friends.stream()
+                .anyMatch(x -> x.getUsername().equals(username)); 
+	}
+	
+	public boolean friendRequestWasSentToUser(String username) {
+		return friendRequestsFromMe.stream()
+                .anyMatch(x -> x.getToUsername().equals(username)); 
+	}
+	
+	public int getFriendsNum() {
+		return friends.size();
+	}
+	
+	public int getFriendRequestsToMeNum() {
+		return friendRequestsToMe.size();
+	}
+	
+	
 }
